@@ -59,8 +59,8 @@ struct CustomSlider: View {
                 .onChanged { value in
                     size = max(0, initialSize + value.translation.width)
                     habit.value = Double(size) / Double(UIScreen.main.bounds.width - 50) * habit.goal
-                    if size > UIScreen.main.bounds.width {
-                        size = UIScreen.main.bounds.width /*- 50*/
+                    if size > UIScreen.main.bounds.width - 50 {
+                        size = UIScreen.main.bounds.width - 50
                         habit.value = habit.goal
                     }
                     user.setValue(habit.value, for: habit, date: date)

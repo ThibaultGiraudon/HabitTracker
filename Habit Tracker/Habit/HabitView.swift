@@ -17,8 +17,9 @@ struct HabitView: View {
     @State private var habitDoneCount = 0
     @State private var animationAmount: CGFloat = 0
     @State private var selectedDate = Date()
+    @State private var days: [Int] = Array(0..<7)
     private var currentHabit: Habit?
-    let weekdays: [String] = ["M", "T", "W", "T", "F", "S", "S"]
+    let weekdays: [String] = ["MO", "TU", "WE", "TH", "FR", "SA", "SU"]
     
     var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -45,26 +46,35 @@ struct HabitView: View {
             .padding(.horizontal)
             HStack {
                 ForEach(0..<7, id: \.self) { index in
-                    Text("\(weekdays[index])")
-                        .foregroundColor(Color("OffWhite"))
-                        .environment(\.colorScheme, .light)
-                        .font(.title.bold())
-                        .frame(width: 40, height: 40)
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .background {
-                            if index == (Calendar.current.component(.weekday, from: selectedDay.date) + 5) % 7 {
-                                Circle()
-                                    .fill(.blue)
-                            } else if index == (Calendar.current.component(.weekday, from: Date()) + 5) % 7 {
-                                Circle()
-                                    .stroke(Color.blue, lineWidth: 5)
-                            }
+                    VStack {
+                        Text("\(weekdays[index])")
+                            .bold()
+                            .foregroundColor(Color("OffWhite"))
+                            .environment(\.colorScheme, .light)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                        Text("\(days[index])")
+                            .bold()
+                            .foregroundColor(Color("DimGray"))
+                            .padding(10)
+                            .background(Color("OffWhite"))
+                            .clipShape(Circle())
+                            .environment(\.colorScheme, .light)
+                    }
+                    .padding(.vertical, 5)
+                    .background {
+                        if index == (Calendar.current.component(.weekday, from: selectedDay.date) + 5) % 7 {
+                            Capsule()
+                                .fill(.blue)
+                        } else if index == (Calendar.current.component(.weekday, from: Date()) + 5) % 7 {
+                            Capsule()
+                                .stroke(Color.blue, lineWidth: 5)
                         }
-                        .clipShape(Circle())
-                        .onTapGesture {
-                            selectedDate = Calendar.current.date(byAdding: .day, value: index - (Calendar.current.component(.weekday, from: Date()) + 5) % 7, to: Date())!
-                            selectedDay = user.getDay(for: selectedDate)
-                        }
+                    }
+                    .clipShape(Capsule())
+                    .onTapGesture {
+                        selectedDate = Calendar.current.date(byAdding: .day, value: index - (Calendar.current.component(.weekday, from: Date()) + 5) % 7, to: Date())!
+                        selectedDay = user.getDay(for: selectedDate)
+                    }
                 }
             }
             ZStack {
@@ -103,7 +113,6 @@ struct HabitView: View {
                                         .disabled(selectedDay.date.stripTime() != Date().stripTime())
                                 }
                             }
-                            .onMove(perform: moveHabit)
                             .onChange(of: user.getDay(for: Date())) {
                                 selectedDay = user.getDay(for: selectedDate)
                             }
@@ -122,15 +131,21 @@ struct HabitView: View {
         }
         .onAppear {
             selectedDay = user.getDay(for: Date())
+            days = getWeekDays()
         }
     }
     
-    private func moveHabit(from source: IndexSet, to destination: Int) {
-        selectedDay.habits.move(fromOffsets: source, toOffset: destination)
-    }
-    
-    private func deleteHabit(at offsets: IndexSet) {
-        selectedDay.habits.remove(atOffsets: offsets)
+    func getWeekDays() -> [Int] {
+        var days: [Int] = []
+        guard let weekInterval = Calendar.current.dateInterval(of: .weekOfYear, for: Date()) else { return [] }
+        
+        var currentDate = weekInterval.start
+        while currentDate < weekInterval.end {
+            days.append(Calendar.current.component(.day, from: currentDate))
+            currentDate = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)!
+        }
+        
+        return days
     }
     
 }

@@ -14,19 +14,12 @@ enum Unit: String, CaseIterable, Identifiable {
     case hours
     case glasses
     
-    
     var id: String { return self.rawValue }
 }
 
 struct AddHabitView: View {
     var user: User
-    let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
+    let columns = Array(repeating: GridItem(.flexible()), count: 5)
     @Environment(\.dismiss) var dismiss
     @FocusState var searchFocus: Bool
     @State private var habit: Habit = Habit()
