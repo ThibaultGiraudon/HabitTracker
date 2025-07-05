@@ -96,8 +96,6 @@ struct StatsView: View {
                     .foregroundStyle(Color("TextColor"))
                     Spacer()
                 }
-                //            }
-                //            .scrollDisabled(true)
             }
         }
         .background(Color("DimGray"))

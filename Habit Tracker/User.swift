@@ -28,12 +28,7 @@ class User: ObservableObject {
            let decodedDays = try? JSONDecoder().decode([Day].self, from: savedDays) {
             self.days = decodedDays
         } else {
-            self.days = [
-                Day(date: Date(), habits: [Habit(name: "test", type: .slider, achieved: false, value: 19, goal: 21, color: .blue, icon: "chevron.left.circle.fill")]),
-                 Day(date: Date() - (86400 * 30), habits: [Habit(name: "test", type: .slider, achieved: false, value: 19, goal: 21, color: .blue, icon: "chevron.left.circle.fill")]),
-                 Day(date: Date() - (86400 * 60), habits: [Habit(name: "test", type: .slider, achieved: false, value: 18, goal: 21, color: .blue, icon: "chevron.left.circle.fill")]),
-                 Day(date: Date() - (86400 * 90), habits: [Habit(name: "test", type: .slider, achieved: true, value: 21, goal: 21, color: .blue, icon: "chevron.left.circle.fill")]),
-                         ]
+            self.days = DefaultData().generateDay(for: 7)
         }
         self.loadHighlights()
     }

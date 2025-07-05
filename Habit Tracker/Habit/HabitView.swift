@@ -100,7 +100,7 @@ struct HabitView: View {
                         }
                         .padding([.top, .leading], 30)
                         ScrollView {
-                            ForEach($selectedDay.habits.sorted(by: { !$0.achieved.wrappedValue && $1.achieved.wrappedValue }), id: \.id) { $habit in
+                            ForEach($selectedDay.habits, id: \.id) { $habit in
                                 switch habit.type {
                                 case .slider:
                                     CustomSlider(user: user, habit: $habit, date: selectedDay.date)
@@ -117,7 +117,6 @@ struct HabitView: View {
                                 selectedDay = user.getDay(for: selectedDate)
                             }
                         }
-                        .listStyle(.plain)
                     }
                 }
             }
