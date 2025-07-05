@@ -26,7 +26,7 @@ Before running the program, make sure you have the following:
 1. Clone this repository to your local machine using:
 
    ```bash
-   git clone https://github.com/Thib1708/BCMF.git
+   git clone https://github.com/ThibaultGiraudon/HabitTracker.git
    ```
 
 2. Open the project in Xcode by double-clicking the `.xcodeproj` file.
